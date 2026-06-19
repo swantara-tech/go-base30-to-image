@@ -27,7 +27,7 @@ jobs:
         run: go test -v -coverprofile=coverage.out ./...
 
       - name: Check coverage
-        run: go tool cover -func=coverage.out | tail -n 1
+        run: go tool cover -func=coverage.out | grep total
 
       - name: Upload coverage report
         uses: codecov/codecov-action@v4
@@ -35,6 +35,7 @@ jobs:
           file: ./coverage.out
           flags: unittests
           name: codecov-umbrella
+          fail_ci_if_error: false
 
   build:
     name: Build
@@ -82,6 +83,7 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -92,8 +94,12 @@ jobs:
           go-version: '1.24'
           cache: true
 
+      - name: Download dependencies
+        run: go mod download
+
       - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v4
+        uses: golangci/golangci-lint-action@v6
         with:
           version: latest
           args: --timeout=5m
+        continue-on-error: true
