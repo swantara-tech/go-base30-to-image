@@ -39,12 +39,26 @@ make deps    # Install dependencies
 make build   # Build binary
 ```
 
-### Download Pre-built Binaries
+## Download Pre-built Binaries
 
 Download from [GitHub Releases](https://github.com/swantara-tech/go-base30-to-image/releases):
-- **Windows:** `jsign-convert-windows-amd64.exe`
-- **Linux:** `jsign-convert-linux-amd64`
-- **macOS:** `jsign-convert-darwin-amd64`
+- **Windows:** `jsign-convert-v1.0.0-windows-amd64.exe`
+- **Linux:** `jsign-convert-v1.0.0-linux-amd64`
+- **macOS:** `jsign-convert-v1.0.0-darwin-amd64`
+
+### Verify Checksums
+
+Each release includes `checksums.txt` with SHA256 hashes. Verify your download:
+
+**Linux/macOS:**
+```bash
+sha256sum -c checksums.txt
+```
+
+**Windows (PowerShell):**
+```powershell
+Get-FileHash jsign-convert-v1.0.0-windows-amd64.exe -Algorithm SHA256
+```
 
 ## Usage
 
@@ -358,6 +372,32 @@ results/
 ├── 1.png
 └── 2.png
 ```
+
+## Making Releases
+
+### Create a New Release
+
+```bash
+# Create and push a new tag
+git tag -a v1.0.0 -m "Initial release"
+git push origin v1.0.0
+```
+
+GitHub Actions will automatically:
+- ✅ Run tests
+- ✅ Build binaries for all platforms (Windows, Linux, macOS)
+- ✅ Generate SHA256 checksums
+- ✅ Create GitHub Release with all binaries
+- ✅ Generate changelog
+
+### Versioning
+
+This project follows [Semantic Versioning](https://semver.org/):
+- **MAJOR** version for incompatible API changes
+- **MINOR** version for new functionality (backward compatible)
+- **PATCH** version for backward compatible bug fixes
+
+Example: `v1.0.0`, `v1.1.0`, `v1.1.1`, `v2.0.0`
 
 ## CI/CD
 
